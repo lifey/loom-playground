@@ -1,10 +1,12 @@
+package playground
+
 import jdk.incubator.concurrent.StructuredTaskScope
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.Duration.*
 import java.util.concurrent.Future
-// --enable-preview --add-exports java.base/jdk.internal.vm=ALL-UNNAMED --add-modules jdk.incubator.concurrent
+// --enable-preview --add-modules jdk.incubator.concurrent --add-exports java.base/jdk.internal.vm=ALL-UNNAMED
 data class Weather(val agency: String, val weather: String)
 
 class WeatherScope : StructuredTaskScope<Weather>() {
