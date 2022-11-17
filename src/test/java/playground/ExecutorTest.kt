@@ -8,11 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class ExecutorTest {
   @Test
-  fun vthreadExecutorTeset() {
+  fun vthreadExecutorTest() {
     println(Runtime.getRuntime().availableProcessors())
 
-    val started = AtomicInteger(0);
-    val done = AtomicInteger(0);
+    val started = AtomicInteger(0)
+    val done = AtomicInteger(0)
 
 
     val start = System.currentTimeMillis()
@@ -23,11 +23,10 @@ class ExecutorTest {
       try {
         for (i in 1..numTasks) {
           executor.submit {
-            recall(100) {
-              if (i % 10000 == 0)
-                println("hello sample $i" + Thread.currentThread())
-              started.incrementAndGet();
-              Thread.sleep(2000); done.incrementAndGet()
+            recall(10) {
+              started.incrementAndGet()
+              Thread.sleep(2000)
+              done.incrementAndGet()
             }
           }
         }
@@ -35,13 +34,9 @@ class ExecutorTest {
         println("error after ${started.get()} threads and  ${System.currentTimeMillis() - start}ms")
       }
     }
+    println("duration: ${System.currentTimeMillis() - start} started: ${started.get()} done: ${done.get()}")
 
 
-    for (i in 1..80) {
-      Thread.sleep(100)
-      println("gap ${System.currentTimeMillis() - start} started ${started.get()} ${done.get()}")
-      if (numTasks == done.get()  ) break;
-    }
     assertEquals(started.get(),done.get())
 
 
