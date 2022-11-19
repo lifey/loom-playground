@@ -11,16 +11,18 @@ class ARequest {
   fun handleRequestAny() {
 
     val shorterPeriod = Duration.ofMillis(1200) // ms
-    val clientA = WeatherServer("a",shorterPeriod)
-    val clientB = WeatherServer("shorter",shorterPeriod.plus(Duration.ofMillis(300)))
+    val clientA = BiddingServer("a",shorterPeriod)
+    val clientB = BiddingServer("shorter",shorterPeriod.plus(Duration.ofMillis(300)))
     val userEmail = "roger.rabbit@carrotmail.com"
-    val userCity = UserResolverClient().findUserByEmail(userEmail).city
+    val userClient = UserResolverClient()
+    val userCountry = userClient.findUserByEmail(userEmail).country
     val startTime = System.currentTimeMillis()
-    val temperature  = executor.invokeAny (listOf(
-      Callable { clientA.readWeather(userCity) } ,
-      Callable { clientB.readWeather(userCity) })).temperature
+    val price  = executor.invokeAny (listOf(
+      Callable { clientA.getBid(userCountry) } ,
+      Callable { clientB.getBid(userCountry) }))
+      .price
 
-    println("temperature is + ${temperature}")
+    println("price is + ${price}")
     println(System.currentTimeMillis()-startTime)
     //println(futureA.get().)
     //futureB.get()
@@ -30,14 +32,15 @@ class ARequest {
   fun handleRequestAll() {
 
     val shorterPeriod = Duration.ofMillis(1200) // ms
-    val clientA = WeatherServer("a",shorterPeriod)
-    val clientB = WeatherServer("shorter",shorterPeriod.plus(Duration.ofMillis(800)))
-    val userCity = UserResolverClient().findUserByEmail("roger.rabbit@carrotmail.com").city
+    val clientA = BiddingServer("a",shorterPeriod)
+    val clientB = BiddingServer("shorter",shorterPeriod.plus(Duration.ofMillis(800)))
+    val userClient = UserResolverClient()
+    val userCountry = userClient.findUserByEmail("roger.rabbit@carrotmail.com").country
     val startTime = System.currentTimeMillis()
     val futureList  = executor.invokeAll (listOf(
-      Callable { clientA.readWeather(userCity) } ,
-      Callable { clientB.readWeather(userCity) }))
-    println("temperature is + ${futureList.get(0).get().temperature}")
+      Callable { clientA.getBid(userCountry) } ,
+      Callable { clientB.getBid(userCountry) }))
+    println("price is + ${futureList.get(0).get().price}")
     println(System.currentTimeMillis()-startTime)
     //println(futureA.get().)
     //futureB.get()

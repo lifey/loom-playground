@@ -9,12 +9,12 @@ class ThreadLocalTest {
 
 
   @Test
-  fun testThreadLocal() {
+  fun testVirtualThreadLocal() {
     val tl= ThreadLocal<String>()
     val s = "someString"
     tl.set(s)
     val extracted = AtomicReference<String>()
-    Thread.ofVirtual().name("virtual-thread").inheritInheritableThreadLocals(false).start {
+    Thread.ofVirtual().name("virtual-thread").start {
       extracted.set(tl.get())
     }.join()
     assertNull(extracted.get())
@@ -43,4 +43,43 @@ class ThreadLocalTest {
     }.join()
     assertNull(extracted.get())
   }
+
+
+  @Test
+  fun testPlatformThreadLocal() {
+    val tl= ThreadLocal<String>()
+    val s = "someString"
+    tl.set(s)
+    val extracted = AtomicReference<String>()
+    Thread.ofPlatform().name("virtual-thread").start {
+      extracted.set(tl.get())
+    }.join()
+    assertNull(extracted.get())
+  }
+
+
+  @Test
+  fun testPlatformInheriableThreadLocal() {
+    val tl= InheritableThreadLocal<String>()
+    val s = "someString"
+    tl.set(s)
+    val extracted = AtomicReference<String>()
+    Thread.ofPlatform().name("virtual-thread").start {
+      extracted.set(tl.get())
+    }.join()
+    assertEquals(extracted.get(),s)
+  }
+
+  @Test
+  fun testInheriablePlatformThreadLocalNoInterit() {
+    val tl= InheritableThreadLocal<String>()
+    val s = "someString"
+    tl.set(s)
+    val extracted = AtomicReference<String>()
+    Thread.ofPlatform().name("virtual-thread").inheritInheritableThreadLocals(false).start {
+      extracted.set(tl.get())
+    }.join()
+    assertNull(extracted.get())
+  }
+
 }

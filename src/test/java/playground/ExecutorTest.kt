@@ -8,8 +8,26 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class ExecutorTest {
   @Test
+  fun vthreadExecutorOneTaskTest() {
+    val multiplier = 100L
+
+    val executor = Executors.newVirtualThreadPerTaskExecutor()
+    val numTasks = 3
+    executor.use {
+
+        for (i in 1..numTasks) {
+          executor.submit {
+
+              Thread.sleep(2000*multiplier)
+          }
+        }
+    }
+  }
+
+  @Test
   fun vthreadExecutorTest() {
     println(Runtime.getRuntime().availableProcessors())
+    val multiplier = 100L
 
     val started = AtomicInteger(0)
     val done = AtomicInteger(0)
@@ -17,7 +35,7 @@ class ExecutorTest {
 
     val start = System.currentTimeMillis()
     val executor = Executors.newVirtualThreadPerTaskExecutor()
-    val numTasks = 100000
+    val numTasks = 100_000
     executor.use {
 
       try {
@@ -25,7 +43,8 @@ class ExecutorTest {
           executor.submit {
             recall(10) {
               started.incrementAndGet()
-              Thread.sleep(2000)
+
+              Thread.sleep(2000*multiplier)
               done.incrementAndGet()
             }
           }
