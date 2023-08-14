@@ -15,8 +15,8 @@ class StructuredTest {
   fun structuredShutdownOnSuccess() {
     val multiplier = 1L
     val shorterPeriod = ofMillis(1200 * multiplier) // ms
-    val serverA = BiddingServer("shorter-service", shorterPeriod)
-    val serverB = BiddingServer("longer-service", shorterPeriod.plus(ofMillis(300 * multiplier)))
+    val serverA = BiddingServer("shorter-expensive-service", shorterPeriod)
+    val serverB = BiddingServer("longer-cheaper-service", shorterPeriod.plus(ofMillis(300 * multiplier)))
 
     val userRClient = UserResolverClient()
     val country = userRClient.findUserByEmail("roger.rabbit@carrotmail.com").country
@@ -26,7 +26,7 @@ class StructuredTest {
       scope.fork { serverA.getBid(country) }
       scope.fork { serverB.getBid(country) }
       val firstSuccessfulFuture = scope.joinUntil(Instant.now().plusMillis(3000))
-      assertEquals("shorter-service", firstSuccessfulFuture.result().agency)
+      assertEquals(100, firstSuccessfulFuture.result().price)
     }
   }
 
@@ -34,8 +34,8 @@ class StructuredTest {
   fun structuredShutdownOnFailure() {
     val multiplier = 1L
     val shorterPeriod = ofMillis(1200 * multiplier) // ms
-    val serverA = BiddingServer("shorter-service", shorterPeriod)
-    val serverB = BiddingServer("longer-service", shorterPeriod.plus(ofMillis(300 * multiplier)))
+    val serverA = BiddingServer("shorter-expensive-service", shorterPeriod)
+    val serverB = BiddingServer("longer-cheaper-service", shorterPeriod.plus(ofMillis(300 * multiplier)))
 
     val country = UserResolverClient().findUserByEmail("roger.rabbit@carrotmail.com").country
 

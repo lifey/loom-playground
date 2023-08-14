@@ -2,7 +2,7 @@ package playground
 
 import org.junit.jupiter.api.Test
 // try with -Djdk.virtualThreadScheduler.maxPoolSize=1 it will show the thread pinning
-class TwoVirtualThreadTest {
+class PinnedVirtualThreadsTest {
   @Test
   fun pinnedVirtualThreads() {
     println(System.getProperty("jdk.virtualThreadScheduler.maxPoolSize"))

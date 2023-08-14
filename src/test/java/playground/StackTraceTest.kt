@@ -4,25 +4,25 @@ import org.junit.jupiter.api.Test
 
 
 class StackTraceTest {
-  fun inner() {
+  private fun inner() {
     val e = Exception()
     println("hi")
     throw e
   }
 
-  fun inner_runner() {
+  private fun inner_runner() {
     recall(
       3,
       ::inner
     )
   }
 
-  fun outer() {
+  private fun outer() {
 
     Thread.ofVirtual().name("stackfragmets-inner").start(::inner_runner).join()
   }
 
-  fun outer_runner() {
+  private fun outer_runner() {
     recall(3, ::outer)
   }
 
