@@ -1,12 +1,11 @@
 package playground
 
-import jdk.incubator.concurrent.StructuredTaskScope
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration.*
 import java.time.Instant
+import java.util.concurrent.StructuredTaskScope
 
-// --enable-preview --add-modules jdk.incubator.concurrent --add-exports java.base/jdk.internal.vm=ALL-UNNAMED
 
 
 class StructuredTest {
